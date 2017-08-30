@@ -1,0 +1,71 @@
+version: "2"
+
+services:
+  db:
+    image: wodby/mariadb:10.1-2.3.3
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+    volumes:
+      - ./database:/var/lib/mysql
+  php:
+    environment:
+      PHP_SENDMAIL_PATH: /usr/sbin/sendmail -t -i -S mailhog:1025
+      DB_HOST: mariadb
+      DB_USER: drupal
+      DB_PASSWORD: drupal
+      DB_NAME: drupal
+      DB_DRIVER: mysql
+      PHP_XDEBUG: 1
+      PHP_XDEBUG_DEFAULT_ENABLE: 1
+      # PHP_XDEBUG_REMOTE_CONNECT_BACK: 0
+      # PHP_XDEBUG_REMOTE_HOST: "10.254.254.254"
+    build: ./php
+    volumes:
+      - ./codebase:/var/www/html
+    links:
+      - db
+#      - memcached
+  apache:
+    depends_on:
+      - php
+    links:
+      - php
+    environment:
+      APACHE_LOG_LEVEL: debug
+      APACHE_BACKEND_HOST: php
+      APACHE_SERVER_ROOT: /var/www/html/web
+    build: ./apache
+    volumes:
+      - ../drupal:/var/www/html
+    labels:
+      - 'traefik.backend=apache'
+      - 'traefik.port=80'
+      - 'traefik.frontend.rule=Host:drupal7.localhost'
+
+#  memcached:
+#    image: wodby/memcached:1.4-2.0.0
+
+  pma:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_USER: drupal
+      PMA_PASSWORD: drupal
+      PHP_UPLOAD_MAX_FILESIZE: 1G
+      PHP_MAX_INPUT_VARS: 1G
+    labels:
+      - 'traefik.backend=pma'
+      - 'traefik.port=80'
+      - 'traefik.frontend.rule=Host:pma.drupal7.localhost'
+
+  traefik:
+    image: traefik
+    command: -c /dev/null --web --docker --logLevel=INFO
+    ports:
+      - '80:80'
+#      - '8080:8080' # Dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
