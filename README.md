@@ -12,11 +12,11 @@ This implementation was based on [Docker4Drupal](https://docker4drupal.readthedo
 
 ## Domains
 
-###Drupal 7
+### Drupal 7
 - **Site:** drupal7.localhost
 - **PMA:** pma.drupal7.localhost
 
-###Drupal 8
+### Drupal 8
 - **Site:** drupal8.localhost
 - **PMA:** pma.drupal8.localhost
 
@@ -28,3 +28,10 @@ To solve permission issues, follow instructions by https://docker4drupal.readthe
 - **database:** Database files. So we can remove database container without lost current database.
 - **apache:** Contain apache container files.
 - **php:** Contain PHP/Drupal container files.
+
+## Notes
+- Use composer to add new module (`compose require drupal/module`).
+- Drupal docroot is under `web` directory.
+
+## To Do
+- [ ] Test *xdebug* and fix it if necessary
