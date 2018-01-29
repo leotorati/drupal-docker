@@ -13,7 +13,7 @@ services:
   php:
     environment:
       PHP_SENDMAIL_PATH: /usr/sbin/sendmail -t -i -S mailhog:1025
-      DB_HOST: mariadb
+      DB_HOST: db
       DB_USER: drupal
       DB_PASSWORD: drupal
       DB_NAME: drupal
