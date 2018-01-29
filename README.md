@@ -21,7 +21,7 @@ This implementation was based on [Docker4Drupal](https://docker4drupal.readthedo
 - **PMA:** pma.drupal8.localhost
 
 ## Permissions issues
-To solve permission issues, follow instructions by https://docker4drupal.readthedocs.io/en/latest/permissions/
+To solve permission issues, follow instructions by https://wodby.com/stacks/drupal/docs/local/permissions/
 
 ## Directory Structure
 - **codebase:** Drupal and composer files.
